@@ -127,24 +127,20 @@ import config from './config';
 import {Movie} from './model/Movie';
 import {User} from './model/User';
 
-
+import {apiRouter} from './routes/api.routes';
 
 
 const app = express();
 
 app.use(express.json());
+app.use(apiRouter);
 
-app.get('/',(req,res)=>{
-	res.status(200).json({
-		message: 'resposta do servidor',
-	});
-});
 
 const port = 5000;
 
 
 
-app.listen(config.PORT, ()=>{
+app.listen(config.PORT, async ()=>{
 	console.log( 'servidor funcionou');
 
 	mongoose.connect(config.MONGO_URI)
