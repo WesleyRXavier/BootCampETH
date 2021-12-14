@@ -1,55 +1,76 @@
 import { Request, Response } from 'express';
 import { User } from '../model/User';
 import jwt from 'jsonwebtoken';
-import config from '../config';
+import { ENV_VARS } from '../index';
 
-async function create(req: Request, res: Response) {
+const token_secret = process.env.TOKEN_SECRET;
 
-    const { name, email, password } = req.body;
+function index(req: Request, res: Response) {
 
-
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-        return res.status(403).json({
-            message: "Usuario ja Existe",
-        })
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            error: 'Usuário não autorizado '
+        });
     }
 
-    const user = new User({ name, email, password });
+    if (!req.user) {
+        return res.status(401).json({
+            error: 'Usuário não autorizado '
+        });
+    }
 
-    user.save((error: any, result: any): void => {
-        if (error) {
-            console.log('Error: ', typeof error);
-            res.json(error);
-        }
+    return res.status(200).json({
+        userId: req.user
+    });
+}
 
-        console.log('Result: ', typeof result);
+async function create(req: Request, res: Response) {
+    const { email, password } = req.body;
 
-        const accessToken = createAccessToken(result._id);
-        res.status(201).json({
+    const userExists = await User.findOne({ email });
+
+    if (!userExists) {
+        return res.status(403).json({
+            message: 'Não foi possível autenticar.'
+        });
+    }
+
+    const isValid = await userExists.comparePassword(password);
+
+    if (!isValid) {
+        return res.status(401).json({
+            message: 'Não foi possível autenticar.'
+        });
+    }
+
+    const accessToken = createAccessToken(userExists._id);
+
+    return res.status(200).json(
+        {
             user: {
-                id: result._id,
-                name: result.name
+                id: userExists._id,
+                name: userExists.name
             },
             accessToken
-
-        });
-    });
-
-    const accessToken = createAccessToken(user._id)
+        }
+    );
 }
 
 function createAccessToken(userId: string) {
+
+    let token = ENV_VARS.token_secret as string;
+
     const accessToken = jwt.sign(
         {
-            id: userId,
+            id: userId
         },
-        config.SECRET_TOKEN,
+        token,
         {
-            expiresIn:900,
+            expiresIn: 900 // 15min
         }
-        );
-        return accessToken;
+    );
+
+    return accessToken;
 }
 
-export { create }
+export { create, index };
