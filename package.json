@@ -1,17 +1,17 @@
 {
-  "name": "TS",
+  "name": "bootcamp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Projeto em Node + Typescript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node --transpile-only --files ./src/index.ts --ignore ./tests"
+    "dev": "nodemon --exec ts-node --transpile-only --files ./src/index.ts --ignore ./tests",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Lara Carvalho",
   "license": "ISC",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/mongoose": "^5.11.97",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",

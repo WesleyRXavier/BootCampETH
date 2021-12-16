@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'; 
-import { User } from '../model/User';
+import { User } from '../models/user.model';
 
 interface UserResult {
     _id: string;
@@ -46,13 +46,13 @@ async function create(req: Request, res: Response) {
 
     const user = new User({ name, email, password });
 
-    user.save((error: any, result: any): void => {
+    user.save((error: any, result: any)=> {
         if (error) {
             console.log('Error: ', typeof error);
-            res.json(error);
+           return res.json(error);
         }
 
-        res.status(201).json(
+      return res.status(201).json(
             {
                 id: result._id,
                 name: result.name

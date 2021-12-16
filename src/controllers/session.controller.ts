@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { User } from '../model/User';
+import { User } from '../models/user.model';
 import jwt from 'jsonwebtoken';
 import { ENV_VARS } from '../index';
 
@@ -66,7 +66,8 @@ function createAccessToken(userId: string) {
         },
         token,
         {
-            expiresIn: 900 // 15min
+            // expiresIn: 900 // 15min
+            expiresIn: 86400 // 1d
         }
     );
 

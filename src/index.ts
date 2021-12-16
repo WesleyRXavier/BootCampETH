@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
 import mongoose from 'mongoose';
 import { apiRouter } from './routes/api.routes';
 import { extRouter } from './routes/external.routes';
@@ -8,6 +9,8 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+
 app.use(apiRouter);
 app.use(extRouter);
 
@@ -17,7 +20,7 @@ const ENV_VARS = {
     token_secret: process.env.TOKEN_SECRET
 }
 
-app.listen(ENV_VARS.port, async () => {
+app.listen(5000, async () => {
     console.log('Server funcionando na porta: ', ENV_VARS.port);
 
     if (ENV_VARS.mongoURI) {
